@@ -1,0 +1,8 @@
+[Bb]in/
+[Oo]bj/
+.vs/
+*.db
+*.zip
+*.user
+*.suo
+.DS_Store

@@ -6,3 +6,5 @@
 *.user
 *.suo
 .DS_Store
+*.db-shm
+*.db-wal

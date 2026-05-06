@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VirtualEventScheduler.Desktop.Maui.Pages.LoginPage"
+             Title="Login">
+
+    <VerticalStackLayout Padding="40" Spacing="20" VerticalOptions="Center">
+        
+        <Label Text="Virtual Event Scheduler"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <Label Text="Login to continue"
+               FontSize="14"
+               TextColor="Gray"
+               HorizontalOptions="Center" />
+
+        <Entry x:Name="txtEmail"
+               Placeholder="Email"
+               Keyboard="Email" />
+
+        <Entry x:Name="txtPassword"
+               Placeholder="Password"
+               IsPassword="True" />
+
+        <Button x:Name="btnLogin"
+                Text="Login"
+                Clicked="btnLogin_Clicked"
+                BackgroundColor="#512BD4"
+                TextColor="White" />
+
+        <Label x:Name="lblError"
+               TextColor="Red"
+               HorizontalOptions="Center"
+               IsVisible="False" />
+
+    </VerticalStackLayout>
+</ContentPage>

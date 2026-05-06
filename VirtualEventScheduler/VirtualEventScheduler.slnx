@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="VirtualEventScheduler.API/VirtualEventScheduler.API.csproj" />
+  <Project Path="VirtualEventScheduler.Data/VirtualEventScheduler.Data.csproj" />
+  <Project Path="VirtualEventScheduler.Desktop.Maui/VirtualEventScheduler.Desktop.Maui.csproj" />
+  <Project Path="VirtualEventScheduler.Desktop/VirtualEventScheduler.Desktop.csproj" />
+  <Project Path="VirtualEventScheduler.Web/VirtualEventScheduler.Web.csproj" />
+</Solution>

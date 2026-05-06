@@ -1,0 +1,57 @@
+@model VirtualEventScheduler.Web.Models.EventCreateViewModel
+@{ ViewData["Title"] = "Create Event"; }
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Create New Event</h2>
+        <hr />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" placeholder="Event title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the event"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DateTime" class="form-label"></label>
+                    <input asp-for="DateTime" type="datetime-local" class="form-control"
+                           value="@Model.DateTime.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="DateTime" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Capacity" class="form-label"></label>
+                    <input asp-for="Capacity" type="number" min="1" max="10000" class="form-control" />
+                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Location" class="form-label"></label>
+                <input asp-for="Location" class="form-control" placeholder="Online / Address / Room" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Create Event</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

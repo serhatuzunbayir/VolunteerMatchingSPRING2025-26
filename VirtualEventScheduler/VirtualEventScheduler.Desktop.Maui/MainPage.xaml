@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VirtualEventScheduler.Desktop.Maui.MainPage"
+             Title="Event Management">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Label x:Name="lblWelcome"
+               FontSize="18"
+               FontAttributes="Bold" />
+
+        <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+
+        <Label Text="Create New Event"
+               FontSize="16"
+               FontAttributes="Bold" />
+
+        <Entry x:Name="txtTitle" Placeholder="Event Title" />
+        <Entry x:Name="txtDescription" Placeholder="Description" />
+        <Entry x:Name="txtLocation" Placeholder="Location" />
+        <Entry x:Name="txtCapacity" Placeholder="Capacity" Keyboard="Numeric" />
+        <DatePicker x:Name="dtpDate" />
+
+        <Button Text="Create Event"
+                Clicked="btnCreate_Clicked"
+                BackgroundColor="#512BD4"
+                TextColor="White" />
+
+        <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+
+        <Label Text="Events List"
+               FontSize="16"
+               FontAttributes="Bold" />
+
+        <Picker x:Name="cmbStatus"
+                Title="Filter by Status"
+                SelectedIndexChanged="cmbStatus_Changed">
+            <Picker.Items>
+                <x:String>All</x:String>
+                <x:String>Active</x:String>
+                <x:String>Completed</x:String>
+                <x:String>Cancelled</x:String>
+            </Picker.Items>
+        </Picker>
+
+        <CollectionView x:Name="eventsCollection">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="10" BorderColor="LightGray">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" />
+                            <Label Text="{Binding Location}" TextColor="Gray" />
+                            <Label Text="{Binding DateTime, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray" />
+                            <Label Text="{Binding RegisteredCount, StringFormat='Registered: {0}'}" />
+                            <Label Text="{Binding Status}" TextColor="Green" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

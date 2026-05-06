@@ -1,0 +1,65 @@
+@model List<VirtualEventScheduler.Web.Models.UserViewModel>
+@{
+    ViewData["Title"] = "User Management";
+    var currentEmail = Context.Session.GetString("UserEmail");
+}
+
+<h2>User Management</h2>
+<p class="text-muted">Promote users to <strong>Admin</strong> or <strong>Staff</strong> so they can create events.</p>
+<hr />
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">No users found.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Current Role</th>
+                <th>Created</th>
+                <th style="min-width: 320px;">Change Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                var isSelf = string.Equals(u.Email, currentEmail, StringComparison.OrdinalIgnoreCase);
+                <tr>
+                    <td>@u.Id</td>
+                    <td>
+                        @u.FullName
+                        @if (isSelf) { <span class="badge bg-info ms-1">you</span> }
+                    </td>
+                    <td>@u.Email</td>
+                    <td>
+                        <span class="badge bg-@(u.Role == "Admin" ? "danger" : u.Role == "Staff" ? "primary" : "secondary")">
+                            @u.Role
+                        </span>
+                    </td>
+                    <td>@u.CreatedAt.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <form asp-action="UpdateRole" method="post" class="d-flex gap-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@u.Id" />
+                            <select name="role" class="form-select form-select-sm" style="max-width: 160px;">
+                                <option value="Admin" selected="@(u.Role == "Admin")">Admin</option>
+                                <option value="Staff" selected="@(u.Role == "Staff")">Staff</option>
+                                <option value="Attendee" selected="@(u.Role == "Attendee")">Attendee</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-outline-primary"
+                                    @(isSelf ? "disabled" : "")
+                                    title="@(isSelf ? "You cannot change your own role" : "Apply role change")">
+                                Update
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

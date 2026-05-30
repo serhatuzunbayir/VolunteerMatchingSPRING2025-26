@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VirtualEventScheduler.Desktop.Maui.Pages.ParticipantsPage"
+             Title="Participants">
+
+    <VerticalStackLayout Padding="20" Spacing="12">
+
+        <Label x:Name="lblEventTitle"
+               FontSize="18"
+               FontAttributes="Bold" />
+
+        <Label x:Name="lblCount"
+               TextColor="Gray"
+               FontSize="14" />
+
+        <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+
+        <CollectionView x:Name="participantsCollection">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,4" Padding="12" BorderColor="LightGray" CornerRadius="6">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding FullName}"
+                                   FontAttributes="Bold"
+                                   FontSize="15" />
+                            <Label Text="{Binding Email}"
+                                   TextColor="Gray"
+                                   FontSize="13" />
+                            <Label Text="{Binding RegisteredAt, StringFormat='Registered: {0:dd MMM yyyy HH:mm}'}"
+                                   TextColor="Gray"
+                                   FontSize="12" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="Refresh"
+                Clicked="btnRefresh_Clicked"
+                BackgroundColor="#512BD4"
+                TextColor="White" />
+
+        <Button Text="Back"
+                Clicked="btnBack_Clicked"
+                BackgroundColor="Gray"
+                TextColor="White" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

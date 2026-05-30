@@ -176,6 +176,97 @@ namespace VirtualEventScheduler.Web.Services
             return JsonConvert.DeserializeObject<UserViewModel>(result);
         }
 
+        /// <summary>Returns the list of participants registered for a given event (Admin/Staff only).</summary>
+        public async Task<List<ParticipantViewModel>> GetEventParticipantsAsync(int eventId)
+        {
+            EnsureAuthHeader();
+
+            var response = await _httpClient.GetAsync($"api/events/{eventId}/registrations");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(ExtractMessage(error) ?? $"Failed to load participants ({(int)response.StatusCode})");
+            }
+
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<ParticipantViewModel>>(result);
+        }
+
+        /// <summary>Returns all events the currently logged-in user has registered for.</summary>
+        public async Task<List<EventViewModel>> GetMyEventsAsync()
+        {
+            EnsureAuthHeader();
+
+            var response = await _httpClient.GetAsync("api/events/my");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(ExtractMessage(error) ?? $"Failed to load your events ({(int)response.StatusCode})");
+            }
+
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<EventViewModel>>(result);
+        }
+
+        /// <summary>Updates an existing event's details (Admin/Staff only).</summary>
+        public async Task<EventViewModel> UpdateEventAsync(int id, EventUpdateViewModel model)
+        {
+            EnsureAuthHeader();
+
+            var dto = new
+            {
+                title = model.Title,
+                description = model.Description,
+                dateTime = model.DateTime,
+                location = model.Location,
+                capacity = model.Capacity
+            };
+
+            var json = JsonConvert.SerializeObject(dto);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PutAsync($"api/events/{id}", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(ExtractMessage(error) ?? $"Failed to update event ({(int)response.StatusCode})");
+            }
+
+            var result = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<EventViewModel>(result);
+        }
+
+        /// <summary>Cancels an event (Admin/Staff only).</summary>
+        public async Task CancelEventAsync(int id)
+        {
+            EnsureAuthHeader();
+
+            var response = await _httpClient.PutAsync($"api/events/{id}/cancel", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(ExtractMessage(error) ?? $"Failed to cancel event ({(int)response.StatusCode})");
+            }
+        }
+
+        /// <summary>Unregisters the current user from an event.</summary>
+        public async Task UnregisterFromEventAsync(int eventId)
+        {
+            EnsureAuthHeader();
+
+            var response = await _httpClient.DeleteAsync($"api/events/{eventId}/registrations");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception(ExtractMessage(error) ?? $"Failed to unregister ({(int)response.StatusCode})");
+            }
+        }
+
         private void EnsureAuthHeader()
         {
             var token = _httpContextAccessor.HttpContext?.Session.GetString("Token");

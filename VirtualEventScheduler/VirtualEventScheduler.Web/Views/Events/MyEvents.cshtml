@@ -1,0 +1,78 @@
+@model List<VirtualEventScheduler.Web.Models.EventViewModel>
+@{ ViewData["Title"] = "My Events"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="page-title mb-0">My Registered Events</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Browse All Events</a>
+</div>
+<p class="text-muted small mb-4">Events within the next 7 days are highlighted as reminders.</p>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <strong>✓</strong> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <strong>✗</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <div class="text-center py-5">
+        <div class="display-1 text-muted mb-3">📭</div>
+        <h5 class="text-muted">No registered events yet</h5>
+        <a asp-action="Index" class="btn btn-brand mt-3">Browse Events</a>
+    </div>
+}
+else
+{
+    @foreach (var evt in Model)
+    {
+        bool isUpcoming = evt.DateTime > DateTime.Now && evt.DateTime <= DateTime.Now.AddDays(7);
+        int daysLeft = (int)(evt.DateTime - DateTime.Now).TotalDays;
+        string statusBg = evt.Status == "Active" ? "success" : evt.Status == "Cancelled" ? "danger" : "secondary";
+
+        <div class="card mb-3 @(isUpcoming ? "reminder-card" : "")">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="mb-1">
+                            @if (isUpcoming)
+                            {
+                                <span class="badge bg-warning text-dark me-2">
+                                    🔔 @(daysLeft == 0 ? "Today!" : daysLeft == 1 ? "Tomorrow!" : $"In {daysLeft} days")
+                                </span>
+                            }
+                            <span class="badge bg-@statusBg">@evt.Status</span>
+                            @if (evt.IsFull) { <span class="badge bg-warning text-dark ms-1">Full</span> }
+                        </div>
+                        <h5 class="fw-bold mb-1">@evt.Title</h5>
+                        <p class="text-muted small mb-1">
+                            📅 @evt.DateTime.ToString("dddd, MMMM dd, yyyy") &nbsp;🕒 @evt.DateTime.ToString("HH:mm")
+                        </p>
+                        <p class="text-muted small mb-0">📍 @evt.Location</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex flex-md-column gap-2 justify-content-md-end">
+                        <a asp-action="Details" asp-route-id="@evt.Id" class="btn btn-brand btn-sm">View Details</a>
+                        @if (evt.Status == "Active")
+                        {
+                            <form asp-action="Unregister" asp-route-id="@evt.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm w-100"
+                                        onclick="return confirm('Unregister from this event?')">
+                                    Unregister
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

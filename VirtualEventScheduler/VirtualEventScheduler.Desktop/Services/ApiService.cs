@@ -80,13 +80,34 @@ namespace VirtualEventScheduler.Desktop.Services
             return JsonConvert.DeserializeObject<EventDto>(result);
         }
 
+        /// <summary>Returns the participant list for a given event (Admin/Staff only).</summary>
         public async Task<List<ParticipantDto>> GetEventParticipantsAsync(int eventId)
         {
             var response = await _httpClient.GetAsync($"api/events/{eventId}/registrations");
-            response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Failed to load participants: {error}");
+            }
 
             var result = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<ParticipantDto>>(result);
+        }
+
+        /// <summary>
+        /// Cancels the specified event via the API.
+        /// The API fires the OnEventCancelled delegate on the server side.
+        /// </summary>
+        public async Task CancelEventAsync(int eventId)
+        {
+            var response = await _httpClient.PutAsync($"api/events/{eventId}/cancel", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Cancel failed: {error}");
+            }
         }
     }
 

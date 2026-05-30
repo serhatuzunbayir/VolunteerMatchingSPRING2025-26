@@ -4,61 +4,129 @@
              x:Class="VirtualEventScheduler.Desktop.Maui.MainPage"
              Title="Event Management">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="14">
 
-        <Label x:Name="lblWelcome"
-               FontSize="18"
-               FontAttributes="Bold" />
+            <!-- Header: welcome + logout -->
+            <Grid ColumnDefinitions="*,Auto">
+                <Label x:Name="lblWelcome"
+                       Grid.Column="0"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+                <Button Grid.Column="1"
+                        Text="Logout"
+                        Clicked="btnLogout_Clicked"
+                        BackgroundColor="Gray"
+                        TextColor="White"
+                        HeightRequest="36"
+                        FontSize="13" />
+            </Grid>
 
-        <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+            <BoxView HeightRequest="1" BackgroundColor="LightGray" />
 
-        <Label Text="Create New Event"
-               FontSize="16"
-               FontAttributes="Bold" />
+            <!-- Create Event section -->
+            <Label Text="Create New Event"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="#512BD4" />
 
-        <Entry x:Name="txtTitle" Placeholder="Event Title" />
-        <Entry x:Name="txtDescription" Placeholder="Description" />
-        <Entry x:Name="txtLocation" Placeholder="Location" />
-        <Entry x:Name="txtCapacity" Placeholder="Capacity" Keyboard="Numeric" />
-        <DatePicker x:Name="dtpDate" />
+            <Entry x:Name="txtTitle" Placeholder="Event Title" />
+            <Entry x:Name="txtDescription" Placeholder="Description" />
+            <Entry x:Name="txtLocation" Placeholder="Location" />
+            <Entry x:Name="txtCapacity" Placeholder="Capacity (number)" Keyboard="Numeric" />
 
-        <Button Text="Create Event"
-                Clicked="btnCreate_Clicked"
-                BackgroundColor="#512BD4"
-                TextColor="White" />
+            <!-- Date and Time pickers side by side -->
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Date:" VerticalOptions="Center" />
+                <DatePicker x:Name="dtpDate" />
+                <Label Text="Time:" VerticalOptions="Center" />
+                <TimePicker x:Name="tpTime" />
+            </HorizontalStackLayout>
 
-        <BoxView HeightRequest="1" BackgroundColor="LightGray" />
+            <Button Text="Create Event"
+                    Clicked="btnCreate_Clicked"
+                    BackgroundColor="#512BD4"
+                    TextColor="White" />
 
-        <Label Text="Events List"
-               FontSize="16"
-               FontAttributes="Bold" />
+            <BoxView HeightRequest="1" BackgroundColor="LightGray" />
 
-        <Picker x:Name="cmbStatus"
-                Title="Filter by Status"
-                SelectedIndexChanged="cmbStatus_Changed">
-            <Picker.Items>
-                <x:String>All</x:String>
-                <x:String>Active</x:String>
-                <x:String>Completed</x:String>
-                <x:String>Cancelled</x:String>
-            </Picker.Items>
-        </Picker>
+            <!-- Events List section -->
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Text="Events List"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="#512BD4"
+                       VerticalOptions="Center" />
+                <Button Grid.Column="1"
+                        Text="Refresh"
+                        Clicked="btnRefresh_Clicked"
+                        BackgroundColor="#E0E0E0"
+                        TextColor="Black"
+                        HeightRequest="36"
+                        FontSize="13" />
+            </Grid>
 
-        <CollectionView x:Name="eventsCollection">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Margin="0,5" Padding="10" BorderColor="LightGray">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" />
-                            <Label Text="{Binding Location}" TextColor="Gray" />
-                            <Label Text="{Binding DateTime, StringFormat='{0:dd/MM/yyyy HH:mm}'}" TextColor="Gray" />
-                            <Label Text="{Binding RegisteredCount, StringFormat='Registered: {0}'}" />
-                            <Label Text="{Binding Status}" TextColor="Green" />
-                        </VerticalStackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            <Picker x:Name="cmbStatus"
+                    Title="Filter by Status"
+                    SelectedIndexChanged="cmbStatus_Changed">
+                <Picker.Items>
+                    <x:String>All</x:String>
+                    <x:String>Active</x:String>
+                    <x:String>Completed</x:String>
+                    <x:String>Cancelled</x:String>
+                </Picker.Items>
+            </Picker>
 
-    </VerticalStackLayout>
+            <!-- Event list - each item shows details + Participants / Cancel buttons -->
+            <CollectionView x:Name="eventsCollection">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,5" Padding="12" BorderColor="LightGray" CornerRadius="8">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       FontSize="16" />
+                                <Label Text="{Binding Location}"
+                                       TextColor="Gray"
+                                       FontSize="13" />
+                                <Label Text="{Binding DateTime, StringFormat='Date: {0:dd/MM/yyyy HH:mm}'}"
+                                       TextColor="Gray"
+                                       FontSize="13" />
+                                <Label Text="{Binding RegisteredCount, StringFormat='Registered: {0}'}"
+                                       FontSize="13" />
+                                <Label Text="{Binding Capacity, StringFormat='Capacity: {0}'}"
+                                       FontSize="13" />
+                                <Label Text="{Binding Status}"
+                                       FontAttributes="Bold"
+                                       FontSize="13"
+                                       TextColor="#512BD4" />
+
+                                <!-- Action buttons per event -->
+                                <HorizontalStackLayout Spacing="8" Margin="0,6,0,0">
+                                    <Button Text="View Participants"
+                                            CommandParameter="{Binding .}"
+                                            Clicked="btnViewParticipants_Clicked"
+                                            BackgroundColor="SteelBlue"
+                                            TextColor="White"
+                                            FontSize="12"
+                                            HeightRequest="32" />
+                                    <Button Text="Cancel Event"
+                                            CommandParameter="{Binding .}"
+                                            Clicked="btnCancelEvent_Clicked"
+                                            BackgroundColor="Firebrick"
+                                            TextColor="White"
+                                            FontSize="12"
+                                            HeightRequest="32" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

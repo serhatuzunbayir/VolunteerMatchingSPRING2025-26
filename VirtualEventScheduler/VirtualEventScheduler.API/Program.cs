@@ -7,12 +7,16 @@ using VirtualEventScheduler.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext
+// Use a path relative to the executable so the database works on any machine
+var dbPath = Path.Combine(AppContext.BaseDirectory, "EventScheduler.db");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite($"Data Source={dbPath}"));
 
 // TokenService
 builder.Services.AddScoped<TokenService>();
+
+// NotificationService registered as singleton so delegate subscriptions persist across requests
+builder.Services.AddSingleton<NotificationService>();
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

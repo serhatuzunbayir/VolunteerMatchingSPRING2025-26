@@ -4,41 +4,49 @@
 @{
     var role = Context.Session.GetString("UserRole");
     var canCreate = role == "Admin" || role == "Staff";
+    var isLoggedIn = Context.Session.GetString("Token") != null;
 }
 
-<div class="d-flex justify-content-between align-items-center mb-2">
-    <h2 class="mb-0">Upcoming Events</h2>
-    @if (canCreate)
-    {
-        <a asp-action="Create" class="btn btn-success">+ Create Event</a>
-    }
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="page-title mb-0">Upcoming Events</h2>
+    <div class="d-flex gap-2">
+        @if (isLoggedIn)
+        {
+            <a asp-action="MyEvents" class="btn btn-outline-secondary btn-sm">My Events</a>
+        }
+        @if (canCreate)
+        {
+            <a asp-action="Create" class="btn btn-brand btn-sm">+ Create Event</a>
+        }
+    </div>
 </div>
 
+<!-- Filter card -->
 <div class="card mb-4">
     <div class="card-body">
-        <h5 class="card-title">Filter Events</h5>
+        <h6 class="card-title fw-bold text-secondary mb-3">Filter Events</h6>
         <form asp-action="Index" method="get">
-            <div class="row">
+            <div class="row g-2">
                 <div class="col-md-3">
-                    <label class="form-label">Start Date</label>
-                    <input type="date" name="startDate" class="form-control" value="@ViewBag.StartDate" />
+                    <label class="form-label small">Start Date</label>
+                    <input type="date" name="startDate" class="form-control form-control-sm" value="@ViewBag.StartDate" />
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">End Date</label>
-                    <input type="date" name="endDate" class="form-control" value="@ViewBag.EndDate" />
+                    <label class="form-label small">End Date</label>
+                    <input type="date" name="endDate" class="form-control form-control-sm" value="@ViewBag.EndDate" />
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Status</label>
-                    <select name="status" class="form-control">
-                        <option value="">All</option>
-                        <option value="Active" selected="@(ViewBag.Status == "Active")">Active</option>
+                    <label class="form-label small">Status</label>
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">All Statuses</option>
+                        <option value="Active"    selected="@(ViewBag.Status == "Active")">Active</option>
                         <option value="Completed" selected="@(ViewBag.Status == "Completed")">Completed</option>
                         <option value="Cancelled" selected="@(ViewBag.Status == "Cancelled")">Cancelled</option>
                     </select>
                 </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">Filter</button>
-                    <a asp-action="Index" class="btn btn-secondary">Clear</a>
+                <div class="col-md-3 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Clear</a>
                 </div>
             </div>
         </form>
@@ -51,28 +59,47 @@
 }
 else
 {
-    <div class="row">
+    <div class="row g-3">
         @foreach (var evt in Model)
         {
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6 col-lg-4">
                 <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">@evt.Title</h5>
-                        <p class="card-text">@evt.Description</p>
-                        <ul class="list-unstyled">
-                            <li><strong>📅 Date:</strong> @evt.DateTime.ToString("dddd, MMMM dd, yyyy")</li>
-                            <li><strong>🕒 Time:</strong> @evt.DateTime.ToString("hh:mm tt")</li>
-                            <li><strong>📍 Location:</strong> @evt.Location</li>
-                            <li><strong>👥 Capacity:</strong> @evt.RegisteredCount / @evt.Capacity</li>
-                            <li>
-                                <strong>Status:</strong>
-                                <span class="badge bg-@(evt.Status == "Active" ? "success" : "secondary")">@evt.Status</span>
-                                @if (evt.IsFull) { <span class="badge bg-warning">Full</span> }
-                            </li>
+                    <div class="card-body d-flex flex-column">
+                        <div class="mb-2">
+                            <span class="badge bg-@(evt.Status == "Active" ? "success" : evt.Status == "Cancelled" ? "danger" : "secondary")">@evt.Status</span>
+                            @if (evt.IsFull) { <span class="badge bg-warning text-dark ms-1">Full</span> }
+                        </div>
+
+                        <h5 class="card-title fw-bold">@evt.Title</h5>
+                        <p class="card-text text-muted small flex-grow-1">
+                            @(evt.Description != null && evt.Description.Length > 100 ? evt.Description[..100] + "…" : evt.Description)
+                        </p>
+
+                        <ul class="list-unstyled small mb-3">
+                            <li><span class="text-muted">📅</span> @evt.DateTime.ToString("ddd, MMM dd yyyy")</li>
+                            <li><span class="text-muted">🕒</span> @evt.DateTime.ToString("HH:mm")</li>
+                            <li><span class="text-muted">📍</span> @evt.Location</li>
                         </ul>
+
+                        <!-- Capacity progress bar: color shifts from green → yellow → red as it fills -->
+                        <div class="capacity-bar mb-3">
+                            <div class="d-flex justify-content-between small text-muted mb-1">
+                                <span>Capacity</span>
+                                <span>@evt.RegisteredCount / @evt.Capacity</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar @(evt.Capacity > 0 && (double)evt.RegisteredCount / evt.Capacity >= 0.9 ? "bg-danger" : evt.Capacity > 0 && (double)evt.RegisteredCount / evt.Capacity >= 0.6 ? "bg-warning" : "bg-success")"
+                                     role="progressbar"
+                                     style="width: @(evt.Capacity > 0 ? (int)Math.Round((double)evt.RegisteredCount / evt.Capacity * 100) : 0)%"
+                                     aria-valuenow="@evt.RegisteredCount"
+                                     aria-valuemin="0"
+                                     aria-valuemax="@evt.Capacity">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                        <a asp-action="Details" asp-route-id="@evt.Id" class="btn btn-primary btn-sm">View Details</a>
+                    <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                        <a asp-action="Details" asp-route-id="@evt.Id" class="btn btn-brand btn-sm w-100">View Details</a>
                     </div>
                 </div>
             </div>

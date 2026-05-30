@@ -1,31 +1,78 @@
-html {
-  font-size: 14px;
+/* ── Brand variables ───────────────────────────────────────────────── */
+:root {
+    --ve-purple:   #5c2d91;
+    --ve-purple-2: #7b3fbf;
+    --ve-light:    #f4f0fa;
+    --ve-dark:     #2d1554;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+/* ── Base ──────────────────────────────────────────────────────────── */
+html { font-size: 14px; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+
+html { position: relative; min-height: 100%; }
+body { margin-bottom: 60px; background-color: #f8f9fc; }
+
+/* ── Navbar ────────────────────────────────────────────────────────── */
+.ve-navbar {
+    background: linear-gradient(90deg, var(--ve-dark) 0%, var(--ve-purple) 100%);
+}
+.ve-navbar .navbar-brand { font-size: 1.2rem; letter-spacing: .5px; }
+.ve-navbar .nav-link { color: rgba(255,255,255,.85) !important; }
+.ve-navbar .nav-link:hover { color: #fff !important; }
+
+/* ── Cards ─────────────────────────────────────────────────────────── */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.card-header { border-radius: 12px 12px 0 0 !important; }
+
+/* ── Event status badges ────────────────────────────────────────────── */
+.badge-active    { background-color: #198754; color: #fff; }
+.badge-cancelled { background-color: #dc3545; color: #fff; }
+.badge-completed { background-color: #6c757d; color: #fff; }
+
+/* ── Capacity progress bar ──────────────────────────────────────────── */
+.capacity-bar .progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: #e9ecef;
+}
+.capacity-bar .progress-bar {
+    border-radius: 4px;
+    transition: width .4s ease;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* ── Buttons ───────────────────────────────────────────────────────── */
+.btn-brand {
+    background: linear-gradient(90deg, var(--ve-purple) 0%, var(--ve-purple-2) 100%);
+    color: #fff;
+    border: none;
+}
+.btn-brand:hover { opacity: .9; color: #fff; }
+
+/* ── Auth forms ────────────────────────────────────────────────────── */
+.auth-card {
+    border-top: 4px solid var(--ve-purple);
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+/* ── Focus rings ────────────────────────────────────────────────────── */
+.btn:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--ve-purple-2);
 }
 
-body {
-  margin-bottom: 60px;
-}
+/* ── Footer ────────────────────────────────────────────────────────── */
+.footer { padding: 16px 0; background-color: #fff; }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
+/* ── Reminder highlight on My Events ───────────────────────────────── */
+.reminder-card { border-left: 4px solid #ffc107 !important; }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* ── Page headers ───────────────────────────────────────────────────── */
+.page-title {
+    font-weight: 700;
+    color: var(--ve-dark);
 }

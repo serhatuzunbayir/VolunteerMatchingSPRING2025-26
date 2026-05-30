@@ -1,8 +1,44 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="py-5 mb-4 rounded-3 text-white text-center"
+     style="background: linear-gradient(135deg, #2d1554 0%, #7b3fbf 100%);">
+    <h1 class="display-5 fw-bold">Virtual Event Scheduler</h1>
+    <p class="fs-5 mb-4 text-white-75">
+        Schedule and manage virtual events. Register for upcoming sessions and never miss a thing.
+    </p>
+    <a asp-controller="Events" asp-action="Index" class="btn btn-light btn-lg me-2">Browse Events</a>
+    @if (Context.Session.GetString("Token") == null)
+    {
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg">Get Started</a>
+    }
+    else
+    {
+        <a asp-controller="Events" asp-action="MyEvents" class="btn btn-outline-light btn-lg">My Events</a>
+    }
+</div>
+
+<div class="row g-4 text-center mb-4">
+    <div class="col-md-4">
+        <div class="card h-100 p-4">
+            <div class="display-4 mb-3">📅</div>
+            <h5 class="fw-bold">Event Scheduling</h5>
+            <p class="text-muted">Create and manage virtual events with date, time, location, and capacity control.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-4">
+            <div class="display-4 mb-3">🔔</div>
+            <h5 class="fw-bold">Reminders</h5>
+            <p class="text-muted">Get notified about events you're registered for. Upcoming events within 7 days are highlighted.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 p-4">
+            <div class="display-4 mb-3">👥</div>
+            <h5 class="fw-bold">Participant Tracking</h5>
+            <p class="text-muted">Admins and staff can view full participant lists and manage event registrations.</p>
+        </div>
+    </div>
 </div>

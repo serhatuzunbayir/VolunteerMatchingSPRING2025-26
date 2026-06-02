@@ -99,3 +99,21 @@ VirtualEventScheduler/
 | Admin | admin@eventapp.com | Admin123! |
 
 New registrations default to the **Attendee** role. Admins can promote users to Staff.
+
+Hocaya sunarken buradan hizlica kopyala yapistir.
+
+Terminal - 1 / API
+cd C:\Users\Batuhan\VolunteerMatchingSPRING2025-26\VirtualEventScheduler
+dotnet run --project VirtualEventScheduler.API/VirtualEventScheduler.API.csproj
+http://localhost:5202
+
+Terminal - 2 / Web
+cd C:\Users\Batuhan\VolunteerMatchingSPRING2025-26\VirtualEventScheduler
+dotnet run --project VirtualEventScheduler.Web/VirtualEventScheduler.Web.csproj
+http://localhost:5203
+
+Terminal - 3 / Desktop
+cd C:\Users\Batuhan\VolunteerMatchingSPRING2025-26\VirtualEventScheduler
+dotnet run --project VirtualEventScheduler.Desktop/VirtualEventScheduler.Desktop.csproj
+admin@eventapp.com
+Admin123!

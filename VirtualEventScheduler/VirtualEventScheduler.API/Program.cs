@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using VirtualEventScheduler.API;
 using VirtualEventScheduler.API.Services;
 using VirtualEventScheduler.Data;
 
@@ -55,6 +56,9 @@ using (var scope = app.Services.CreateScope())
         admin.Role = "Admin";
         db.SaveChanges();
     }
+
+    // Seed demo data for presentation (only runs when DB is empty)
+    SeedData.Initialize(db);
 }
 
 if (app.Environment.IsDevelopment())

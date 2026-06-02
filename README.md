@@ -99,3 +99,7 @@ VirtualEventScheduler/
 | Admin | admin@eventapp.com | Admin123! |
 
 New registrations default to the **Attendee** role. Admins can promote users to Staff.
+
+Web Video With Sound: https://youtu.be/0PM3j7NPzHw
+Web Video Without Sound: https://youtu.be/nf4ltcwffQ0
+Desktop Video: https://youtu.be/RPvgdqosu3M
